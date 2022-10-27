@@ -74,6 +74,15 @@ class BTree{
         }
            
     }
+    // xóa cây
+    void deleteTreeRec(BNode * r){
+        if(r){
+            deleteTreeRec(r->left);
+            deleteTreeRec(r->right);
+            r->element = 0;
+            delete r;
+        }
+    }
 public: 
     BTree(): root(0), size(0){};
     void preOder()const {preOrderRec(root);}
@@ -83,6 +92,7 @@ public:
     int countLeaf () const{return countLeafRec(root);}
     int height()const {return heightRec(root);}
     void add(const E e) {addRec(root,e);}
+    void deleteTree()   {deleteTreeRec(root);}
 };
 
 int main(){

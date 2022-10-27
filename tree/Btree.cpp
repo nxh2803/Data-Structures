@@ -74,13 +74,21 @@ class BTree{
         }
            
     }
-    // xóa cây
-    void deleteTreeRec(BNode * r){
+     // xóa cây
+    void clearRec(BNode * &r){
         if(r){
-            deleteTreeRec(r->left);
-            deleteTreeRec(r->right);
-            r->element = 0;
-            delete r;
+            clearRec(r->left);
+            clearRec(r->right);
+            delete r;  
+            r = 0;
+        }
+    }
+    // hàm tạo sao chép
+    void copyRec(BNode * & l,const BNode * r){
+        if(r){
+            l->element = r->element;
+            copyRec(l->left,r->left);
+            copyRec(l->right,r->right);
         }
     }
 public: 
@@ -92,6 +100,7 @@ public:
     int countLeaf () const{return countLeafRec(root);}
     int height()const {return heightRec(root);}
     void add(const E e) {addRec(root,e);}
+    void copy(BNode * & l) {copyRec(l,root);}
     void deleteTree()   {deleteTreeRec(root);}
 };
 

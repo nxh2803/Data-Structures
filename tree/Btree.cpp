@@ -49,9 +49,11 @@ class BTree{
         // if(r->isLeaf)   return 1;
         // return countLeafRec(r->left) + countLeafRec(r->right);
     }
-    // int countInternalRec(const BNode * r) const{
-        
-    // }
+    int countInternalNodeRec(const BNode * r) const{
+        if (!r) return 0; 
+        return r->isInternal() + countInternalNodeRec(r->left) 
+                        + countInternalNodeRec(r->right); 
+    }
     // int countLeftLeaf(const BNode * r) const{
         
     // }
@@ -74,7 +76,7 @@ class BTree{
         }
            
     }
-     // xóa cây
+    // xóa cây
     void clearRec(BNode * &r){
         if(r){
             clearRec(r->left);
@@ -85,8 +87,9 @@ class BTree{
     }
     // hàm tạo sao chép
     void copyRec(BNode * & l,const BNode * r){
-        if(r){
-            l->element = r->element;
+        if(!r) l = 0;
+        else{
+            l = new BNode(r->element);
             copyRec(l->left,r->left);
             copyRec(l->right,r->right);
         }
@@ -100,8 +103,17 @@ public:
     int countLeaf () const{return countLeafRec(root);}
     int height()const {return heightRec(root);}
     void add(const E e) {addRec(root,e);}
-    void copy(BNode * & l) {copyRec(l,root);}
-    void deleteTree()   {deleteTreeRec(root);}
+    void clear()   {clearRec(root);}
+    int countLeftLeaf () const { return countLeafRec(root->left); }
+    int countRightLeaf () const { return countLeafRec(root->right); }
+    int countInternalNode() const{return countInternalNodeRec(root); }
+    BTree(const BTree<E> & r) {copyRec(root,r.root);}
+    ~BTree(){clearRec(root);}
+    BTree<E> operator = (const BTree<E> & r){
+        clear();
+        copyRec(root,r.root);
+        return *this;
+    }
 };
 
 int main(){
@@ -113,5 +125,12 @@ int main(){
     a.add(2);
     a.inOrder();
     cout<<endl;
-    a.postOrder();
+    BTree<int> d;
+    d = a;
+    d.inOrder();
+    // BTree<int> b(a),c = a;// khởi gán
+    // b.inOrder();
+    // cout<<endl;
+    // c.inOrder();
+    return 0;
 }

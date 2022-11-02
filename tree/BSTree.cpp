@@ -55,6 +55,37 @@ class BSTree{
         if (key < r->element) return findRec(r->left, key); 
         return findRec(r->right, key); 
     }
+    //
+    BNode * & searchRec(BNode * & r,const E & e){
+        if(!r)  return r;
+        if(e = r->element){return r;}
+        else if(e < r->element){return searchRec(r->left,e);}
+        else{return searchRec(r->right,e);}
+    }
+    // 
+    void searchRemoveRec(BNode * & r, const E & e){ 
+        if (!r) {
+            cout << "Khong tim thay, khong the xoa\n"; 
+            return;
+        }
+        if (e<r->element)searchRemoveRec(r->left, e);
+        else if (e>r->element)searchRemoveRec(r->right, e)
+        else{
+            Node<E> * cur = r; 
+            if (!r->left) r=r->right; 
+            else if (!r->right) r = r->left;
+            else{
+                cur = r->left; 
+                Node<E> * parent = r; 
+                for (; cur->right;parent = cur,cur = cur->right);
+                r->element = cur->element; 
+                if (cur == r->left) parent->left = cur->left; 
+                else parent->right = cur->left;  
+            }
+            delete cur; 
+            cur = 0; 
+        }
+    }
     
 public: 
     BSTree(): root(0), size(0){};
